@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="./main.css"/>
+	<!-- <script data-consolejs-channel="841321a1-66df-47d4-8fcc-7fb9d3c4b373" src="https://remotejs.com/agent/agent.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+	<script src="https://cdn.polyfill.io/v3/polyfill.js?features=default,String.prototype.repeat,Array.prototype.find,Array.prototype.findIndex,Math.trunc,Math.sign,Object.is"></script>
+	<script src="https://unpkg.com/spacetime"></script>
+</head>
+
+<body>
+	<div class="clockContainer">
+		<p id="txt"></p>
+	</div>
+
+	<!-- <div class="month">
+		<ul>
+			<li>
+				August<br>
+			</li>
+		</ul>
+	</div>
+	
+	<ul class="weekdays">
+		<li>Mon</li>
+		<li>Tue</li>
+		<li>Wed</li>
+		<li>Thu</li>
+		<li>Fri</li>
+		<li>Sat</li>
+		<li>Sun</li>
+	</ul>
+	
+	<ul class="days">
+		<li>1</li>
+		<li>2</li>
+		<li>3</li>
+		<li>4</li>
+		<li>5</li>
+		<li>6</li>
+		<li>7</li>
+		<li>8</li>
+		<li>9</li>
+		<li><span class="active">10</span></li>
+		<li>11</li>
+		<li>12</li>
+		<li>13</li>
+		<li>14</li>
+		<li>15</li>
+		<li>16</li>
+		<li>17</li>
+		<li>18</li>
+		<li>19</li>
+		<li>20</li>
+		<li>21</li>
+		<li>22</li>
+		<li>23</li>
+		<li>24</li>
+		<li>25</li>
+		<li>26</li>
+		<li>27</li>
+		<li>28</li>
+		<li>29</li>
+		<li>30</li>
+		<li>31</li>
+	</ul> -->
+	
+	<div id="statusMessage" class="centerText" style="visibility: hidden">
+		<p>status message</p>
+	</div>
+
+	<a href="/config.html" class="centerText">settings</a>
+</body>
+
+<script>
+	// Kindle uses UTC time, prompt them to change their settings
+	// if ( spacetime.now().timezone().name == 'Utc' ) {
+	// 	document.querySelector('#statusMessage p').innerText = 'Your timezone is set to UTC, please change your timezone in the settings'
+	// 	document.querySelector('#statusMessage').style.visibility = 'visible'
+	// }
+
+	function getTime() {
+		var tz = Cookies.get('timezone')
+		var tzHour = spacetime.now(tz).hour()
+		var tzMin = spacetime.now(tz).minute()
+		var tzSecond = spacetime.now(tz).second()
+
+		var timeFormat = Cookies.get('timeformat')
+	
+		// converts to 12 hour time
+		if (timeFormat == '12' && tzHour > 12) {
+			tzHour += -12
+		}
+
+		return {
+			hour: tzHour,
+			minute: tzMin,
+			second: tzSecond
+		}
+	}
+
+	startTime()
+	function startTime() {
+		var currTime = getTime()
+		document.getElementById('txt').innerHTML = currTime.hour + ":" + currTime.minute;
+		var t = setTimeout(startTime, 1000 * 60); // not the most accurate time
+	}
+</script>
+
+<style>
+	* {
+		box-sizing: border-box;
+	}
+	html {
+		font-family: Helvetica;
+	}
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	.clockContainer > * {
+		margin: 0;
+		padding: 0;
+	}
+	.clockContainer > p {
+		font-weight: 500;
+		font-size: 300px;
+		text-align: center;
+	}
+
+	
+	ul {
+		list-style-type: none;
+	}
+
+	.month {
+		padding: 20px 25px;
+		width: 100%;
+		text-align: center;
+	}
+
+	.month ul {
+		margin: 0;
+		padding: 0;
+	}
+
+	.month ul li {
+		font-size: 50px;
+		text-transform: uppercase;
+		letter-spacing: 3px;
+	}
+
+	/* .month .prev {
+		float: left;
+		padding-top: 10px;
+	}
+
+	.month .next {
+		float: right;
+		padding-top: 10px;
+	} */
+
+	.weekdays {
+		margin: 0;
+		padding: 10px 0;
+		text-transform: uppercase;
+		/* background-color: #ddd; */
+	}
+
+	.weekdays li {
+		display: inline-block;
+		width: 13.6%;
+		color: black;
+		text-align: center;
+	}
+
+	.days {
+		padding: 15px 0;
+		/* background: #eee; */
+		margin: 0;
+	}
+
+	.days li {
+		list-style-type: none;
+		display: inline-block;
+		width: 13.6%;
+		text-align: center;
+		margin-bottom: 20px;
+		font-size:50px;
+		color: black;
+	}
+
+	.days li .active {
+		padding: 5px 15px;
+		background: black;
+		color: white !important
+	}
+
+	/* Add media queries for smaller screens */
+
+	/* kindle oasis */
+	@media screen and (max-width:1030px) {
+		.weekdays li, .days li {width: 13.1%;}
+	}
+
+	/* kindle PW 1 & 2 */
+	@media screen and (max-width:760px) {
+		.weekdays li, .days li {width: 13.1%;}
+		.clockContainer > p { font-size: 200px; }
+		/* * {
+			background-color: black;
+		}
+		* {
+			color: black;
+		} */
+	}
+
+	@media screen and (max-width: 420px) {
+		.weekdays li, .days li {width: 12.5%;}
+		.days li .active {padding: 2px;}
+	}
+
+	@media screen and (max-width: 290px) {
+		.weekdays li, .days li {width: 12.2%;}
+	}
+</style>
+
+</html>
